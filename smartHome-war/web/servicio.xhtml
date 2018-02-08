@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/master.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="contenido">
+
+        <h:form id="form">
+            <p:commandButton value="NUEVO" actionListener="#{managedBeanServicio.preparaNuevoObjeto()}" oncomplete="PF('dglCrear').show();" update=":frmCrear:datos"/> 
+
+            <p:dataTable var="item" value="#{managedBeanServicio.listaBD}">
+                <p:column headerText="ID">
+                    <h:outputText value="#{item.pkId}"/>
+                </p:column>
+                <p:column headerText="DESCRIP" filterBy="#{item.descripcion}" filterMatchMode="contains">
+                    <h:outputText value="#{item.descripcion}"/>
+                </p:column>
+                <p:column headerText="TIPO SERVICIO">
+                    <h:outputText value="#{item.tipoServicio.descripcion}"/>
+                </p:column>
+                <p:column headerText="FECHA" style="text-align: center;">
+                    <h:outputText value="#{item.fecCreacion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="OP" style="text-align: center;">
+                    <p:commandButton value="Editar" actionListener="#{managedBeanServicio.editar(item)}" oncomplete="PF('dglEditar').show();" update=":frmEditar:datos"/>
+                </p:column>
+                <p:column headerText="OP" style="text-align: center;">
+                    <p:commandButton value="ELIMINAR" actionListener="#{managedBeanServicio.editar(item)}" oncomplete="PF('dglEliminar').show();" update=":frmEliminar:datos"/>
+                </p:column>
+            </p:dataTable>
+            
+            <p:dataTable var="item" value="#{managedBeanRecibo.traerFiltrada}">
+                <p:column headerText="ID">
+                    <h:outputText value="#{item.pkId}"/>
+                </p:column>
+
+                <p:column headerText="Monto">
+                    <h:outputText value="#{item.monto}"/>
+                </p:column>
+
+                <p:column headerText="Mes">
+                    <h:outputText value="#{item.numMes}"/>
+                </p:column>
+
+                <p:column headerText="Servicio">
+                    <h:outputText value="#{item.servicio.descripcion}"/>
+                </p:column>
+
+                <p:column headerText="Servicio">
+                    <h:outputText value="#{item.servicio.tipoServicio.descripcion}"/>
+                </p:column>
+
+            </p:dataTable>
+            
+            <p:dataTable var="item" value="#{managedBeanRecibo.listaCategoria}">
+                <p:column headerText="">
+                    <h:outputText value="#{item[0]}"/>
+                </p:column>
+                <p:column headerText="">
+                    <h:outputText value="#{item[1]}"/>
+                </p:column>
+                <p:column headerText="">
+                    <h:outputText value="#{item[2]}"/>
+                </p:column>
+                
+                <p:column headerText="CATEGORIA">
+                    <h:outputText value="#{item[3]}"/>
+                </p:column>
+
+               
+
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="frmCrear">
+            <p:dialog header="Crear Nuevo" modal="true" widgetVar="dglCrear" showEffect="explode" hideEffect="bounce" height="100">
+
+                <h:panelGrid columns="2" id="datos">
+                    <h:outputText value="Tipo Servicio" />
+                    <p:autoComplete var="ts" itemLabel="#{ts.descripcion}" itemValue="#{ts}" completeMethod="#{managedBeanTipoServicio.autocompletar}" converter="tipoServicioConverter" value="#{managedBeanServicio.objeto.tipoServicio}"/>
+                    <h:outputText value="DESCRIPCION" />
+                    <p:inputText value="#{managedBeanServicio.objeto.descripcion}"/>
+                    <p:separator/>
+                    <p:commandButton value="GUARDAR" actionListener="#{managedBeanServicio.crear()}" update=":form" oncomplete="PF('dglCrear').hide();"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
+        <h:form id="frmEditar">
+            <p:dialog header="Editar Elemento" modal="true" widgetVar="dglEditar" showEffect="explode" hideEffect="bounce" height="100">
+
+                <h:panelGrid columns="2" id="datos">
+                    <h:outputText value="TIPO" />
+                    <p:selectOneMenu value="#{managedBeanServicio.objeto.tipoServicio}" effect="drop" converter="tipoServicioConverter">
+                        <f:selectItems value="#{managedBeanTipoServicio.listaItems}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="DESCRIPCION" />
+                    <p:inputText value="#{managedBeanServicio.objeto.descripcion}"/>
+                    <p:separator/>
+                    <p:commandButton value="EDITAR" actionListener="#{managedBeanServicio.editarObjeto()}" update=":form" oncomplete="PF('dglEditar').hide();"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
+        <h:form id="frmEliminar">
+            <p:dialog header="Eliminar Elemento" modal="true" widgetVar="dglEliminar" showEffect="explode" hideEffect="bounce" height="100">
+
+                <h:panelGrid columns="2" id="datos">
+                    <h:outputText value="DESCRIPCION" />
+                    <p:inputText value="#{managedBeanServicio.objeto.descripcion}"/>
+                    <p:separator/>
+                    <p:commandButton value="ELIMINAR" actionListener="#{managedBeanServicio.eliminarObjeto()}" update=":form" oncomplete="PF('dglEliminar').hide();"/>
+                </h:panelGrid>
+
+            </p:dialog>
+        </h:form>
+
+
+
+
+    </ui:define>
+
+
+</ui:composition>
