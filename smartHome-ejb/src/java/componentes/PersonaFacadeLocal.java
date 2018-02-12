@@ -31,4 +31,5 @@ public interface PersonaFacadeLocal {
 
     int count();
     List<PersonaReporte> listaPersonas();
+    Object buscar_login(String usuario_);
 }
