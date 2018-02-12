@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `grupo` (
 /*!40000 ALTER TABLE `grupo` DISABLE KEYS */;
 INSERT INTO `grupo` (`pk_id`, `nombre`, `descripcion`) VALUES
 	(1, 'admin', 'Administrador del sistema'),
-	(2, 'miembro_familia', '');
+	(2, 'padre_familia', '');
 /*!40000 ALTER TABLE `grupo` ENABLE KEYS */;
 
 -- Volcando estructura para tabla smarthome.grupo_usuario
@@ -57,33 +57,34 @@ CREATE TABLE IF NOT EXISTS `grupo_usuario` (
   KEY `FK__grupo` (`fk_grupo`),
   CONSTRAINT `FK__grupo` FOREIGN KEY (`fk_grupo`) REFERENCES `grupo` (`pk_id`),
   CONSTRAINT `FK__usuario` FOREIGN KEY (`fk_usuario`) REFERENCES `usuario` (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla smarthome.grupo_usuario: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `grupo_usuario` DISABLE KEYS */;
 INSERT INTO `grupo_usuario` (`pk_id`, `fk_usuario`, `fk_grupo`) VALUES
 	(1, 2, 1),
-	(3, 2, 2);
+	(2, 3, 2);
 /*!40000 ALTER TABLE `grupo_usuario` ENABLE KEYS */;
 
 -- Volcando estructura para tabla smarthome.persona
 CREATE TABLE IF NOT EXISTS `persona` (
   `pk_id` int(11) NOT NULL AUTO_INCREMENT,
   `ape_pat` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`pk_id`)
+  `fk_usuario` int(11) DEFAULT NULL,
+  PRIMARY KEY (`pk_id`),
+  KEY `FK_persona_usuario` (`fk_usuario`),
+  CONSTRAINT `FK_persona_usuario` FOREIGN KEY (`fk_usuario`) REFERENCES `usuario` (`pk_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla smarthome.persona: ~8 rows (aproximadamente)
+-- Volcando datos para la tabla smarthome.persona: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` (`pk_id`, `ape_pat`) VALUES
-	(1, 'ZAVALETA'),
-	(2, 'CAMPOS'),
-	(3, 'ZAVALETA'),
-	(4, 'JARA'),
-	(5, 'DIAS'),
-	(6, 'ZAVALETA'),
-	(7, 'LOPEZ'),
-	(8, 'CAMPOS');
+INSERT INTO `persona` (`pk_id`, `ape_pat`, `fk_usuario`) VALUES
+	(1, 'ZAVALETA', 2),
+	(2, 'PEREZ', 3),
+	(4, 'JARA', NULL),
+	(5, 'DIAS', NULL),
+	(7, 'LOPEZ', NULL),
+	(8, 'CAMPOS', NULL);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 
 -- Volcando estructura para tabla smarthome.recibo
@@ -157,13 +158,13 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `clave` varchar(200) NOT NULL DEFAULT '0',
   `nombres` varchar(200) NOT NULL DEFAULT '0',
   PRIMARY KEY (`pk_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla smarthome.usuario: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
 INSERT INTO `usuario` (`pk_id`, `username`, `clave`, `nombres`) VALUES
-	(1, 'sysadmin', '123456', 'administrador del sistema'),
-	(2, 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'Daniel');
+	(2, 'yzavaleta', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', ''),
+	(3, 'jperez', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 -- Volcando estructura para vista smarthome.vista_usuarios
@@ -201,7 +202,7 @@ SET SQL_MODE=@OLDTMP_SQL_MODE;
 -- Volcando estructura para vista smarthome.vista_usuarios
 -- Eliminando tabla temporal y crear estructura final de VIEW
 DROP TABLE IF EXISTS `vista_usuarios`;
-CREATE ALGORITHM=UNDEFINED  VIEW `vista_usuarios` AS select u.username,u.clave,g.nombre as perfil 
+CREATE ALGORITHM=UNDEFINED VIEW `vista_usuarios` AS select u.username,u.clave,g.nombre as perfil 
 from usuario u inner join grupo_usuario gu on
 gu.fk_usuario=u.pk_id inner join grupo g on gu.fk_grupo=g.pk_id ;
 

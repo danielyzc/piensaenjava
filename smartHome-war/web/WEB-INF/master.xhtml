@@ -27,7 +27,8 @@
         <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800" rel="stylesheet"/>
     </h:head>
     <h:body>
-
+        <!-- Control de acceso video 01 -->
+        #{managedBeanLogin.validarLogin(facesContext.externalContext.remoteUser)}
         <!-- banner -->
         <div class="wthree_agile_admin_info">
             <!-- /w3_agileits_top_nav-->
@@ -55,7 +56,7 @@
         <!--copy rights end here-->
         <!-- js -->
 
-        
+
 
         <!-- /amcharts -->
         <script src="js/amcharts.js"></script>
@@ -155,12 +156,12 @@
                     "gridPosition": "start",
                     "axisAlpha": 0,
                     "gridAlpha": 0
-
+                            
                 },
                 "export": {
                     "enabled": true
                 }
-
+                
             }, 0);
         </script>
         <!-- Chart code -->
