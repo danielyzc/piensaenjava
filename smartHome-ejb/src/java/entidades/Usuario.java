@@ -62,6 +62,8 @@ public class Usuario implements Serializable {
     private String nombres;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<GrupoUsuario> grupoUsuarioList;
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private List<Persona> personaList;
 
     public Usuario() {
     }
@@ -116,6 +118,15 @@ public class Usuario implements Serializable {
 
     public void setGrupoUsuarioList(List<GrupoUsuario> grupoUsuarioList) {
         this.grupoUsuarioList = grupoUsuarioList;
+    }
+
+    @XmlTransient
+    public List<Persona> getPersonaList() {
+        return personaList;
+    }
+
+    public void setPersonaList(List<Persona> personaList) {
+        this.personaList = personaList;
     }
 
     @Override
